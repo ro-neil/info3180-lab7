@@ -23,10 +23,10 @@ def upload():
             flash('File Saved', 'success')
             form_data = jsonify(
                 message = 'File Upload Successful',
-                description = request.form['description'],
-                filename = file_name
+                filename = file_name,
+                description = request.form['description']
             )
-            return redirect(url_for('home'))
+            return form_data
         return jsonify(errors=form_errors(form))
     return render_template('index.html',form=form)
 
