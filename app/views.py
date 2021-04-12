@@ -6,18 +6,22 @@ This file creates your application.
 """
 
 from app import app
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, json
+from flask.helpers import flash
+from .forms import UploadForm
+from werkzeug.utils import secure_filename
+import os
 
 ###
 # Routing for your application.
 ###
 
-@app.route('/api/upload', methods=["GET", "POST"])
+@app.route('/api/upload', methods=["POST"])
 def upload():
     form = UploadForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            file = request.files['file']
+            file = request.files['photo']
             file_name = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
             flash('File Saved', 'success')
