@@ -11,6 +11,17 @@ const app = Vue.createApp({
 app.component('upload-form', {
     name: 'UploadForm',
     template: `
+    <div v-if="success === 'File Upload Successful'" class="bg-success text-white py-2 px-4 rounded mb-3">
+        {{ errors = '' }}
+        <h5>{{ success }}</h5>
+    </div>
+    <ul v-if="errors.length > 0" class="bg-danger text-white py-2 px-4 rounded">
+        <li v-for="error in errors" style="list-style-type: none;">
+            <div>
+                <h5>{{ error }}</h5>
+            </div>
+        </li>
+    </ul>
     <form method="post" @submit.prevent="uploadPhoto" id="uploadForm">
         <h2>Upload Form</h2>
         <div class="form-group">
@@ -28,13 +39,15 @@ app.component('upload-form', {
     `,
     data() {
         return {
-            "key":"value"
+            errors: "",
+            success: ""
         }
     },
     methods: {
         uploadPhoto() {
         let uploadForm = document.getElementById('uploadForm');
         let form_data = new FormData(uploadForm);
+        let self = this;
         fetch("/api/upload", {
             method: 'POST',
             body: form_data,
@@ -47,8 +60,11 @@ app.component('upload-form', {
                 return response.json();
             })
             .then(function (jsonResponse) {
-                // display a success message
-                console.log(jsonResponse);
+                // display a success error
+                // console.log(jsonResponse);
+                self.errors = jsonResponse['errors']
+                self.success = jsonResponse['message']
+                console.log(jsonResponse)
             })
             .catch(function (error) {
                 console.log(error);

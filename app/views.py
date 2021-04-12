@@ -24,12 +24,12 @@ def upload():
             file = request.files['photo']
             file_name = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
-            flash('File Saved', 'success')
             form_data = jsonify(
                 message = 'File Upload Successful',
                 filename = file_name,
                 description = request.form['description']
             )
+            flash('File Upload Successful', 'success')
             return form_data
         return jsonify(errors=form_errors(form))
     return render_template('index.html',form=form)
